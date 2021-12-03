@@ -12,6 +12,11 @@ exports.getFreshers = async (req, res, next) => {
   if (currFresher.length === 0 || !currFresher) {
     return next(new httpError("Freshers not found", 500));
   }
+
+  currFresher.map((curr) => {
+    curr.password = "*";
+  });
+
   res.status(201).json({
     user: currFresher.map((curr) => curr.toObject({ getters: true })),
   });
@@ -28,6 +33,9 @@ exports.getFreshersById = async (req, res, next) => {
   if (!currFresher) {
     return next(new httpError("Freshers not found", 500));
   }
+
+  currFresher.password = "*";
+
   res.status(201).json({ user: currFresher.toObject({ getters: true }) });
 };
 

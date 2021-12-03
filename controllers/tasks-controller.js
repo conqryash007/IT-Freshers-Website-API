@@ -26,6 +26,9 @@ exports.getTaskById = async (req, res, next) => {
   if (!currTask) {
     return next(new httpError("Task not found", 500));
   }
+  currTask.data.map((curr) => {
+    curr.answer = "*";
+  });
   res.status(201).json({ user: currTask.toObject({ getters: true }) });
 };
 
