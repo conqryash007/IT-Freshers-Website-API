@@ -10,6 +10,7 @@ const userSchema = new Schema({
       fakename: { type: String, required: true },
       riddle: { type: String, required: true },
       answer: { type: String, required: true },
+      indx: { type: Number, required: true },
     },
   ],
 });

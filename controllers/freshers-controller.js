@@ -1,5 +1,6 @@
 const httpError = require("./../models/http-error");
 const Fresher = require("./../models/fresher");
+const jwt = require("jsonwebtoken");
 
 // FOR GETTING ALL DATA RELATED TO FRESHERS
 exports.getFreshers = async (req, res, next) => {
@@ -42,7 +43,6 @@ exports.getFreshersById = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   const rollid = req.body.rollid;
   const password = req.body.password;
-
   let currFresher;
   try {
     [currFresher] = await Fresher.find({ rollid: rollid });
@@ -58,7 +58,20 @@ exports.login = async (req, res, next) => {
     return next(new httpError("WRONG PASSWORD", 500));
   }
 
-  res.send("Logged In");
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: currFresher.rollid, password: currFresher.password },
+      process.env.PRIVATE_KEY,
+      { expiresIn: "6h" }
+    );
+  } catch (err) {
+    return next(new httpError("Something went wrong. Log in failed!", 500));
+  }
+
+  res
+    .status(201)
+    .json({ userId: currFresher.rollid, token: token, uid: currFresher.id });
 };
 
 exports.addFresher = async (req, res, next) => {

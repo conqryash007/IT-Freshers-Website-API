@@ -77,7 +77,7 @@ exports.checkAns = async (req, res, next) => {
   [currQues] = currQues.data.filter((curr) => {
     return curr.id === qid;
   });
-  const indx = Number(userAns.substr(-2));
+  const indx = currQues.indx;
   if (currFresher.task0[indx] !== null && currFresher.task0[indx] >= 0) {
     return next(new httpError("Already answered", 500));
   }
@@ -96,5 +96,5 @@ exports.checkAns = async (req, res, next) => {
     return next(new httpError("Something went wrong", 500));
   }
 
-  res.send(currFresher);
+  res.status(201).json({ message: "Correct answer" });
 };
